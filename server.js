@@ -42,3 +42,21 @@ app.post("/mp4", (req, res) => {
 app.listen(3000, () => {
   console.log("MP3 backend running");
 });
+app.post("/mp4", (req, res) => {
+  const { url } = req.body;
+  if (!url) return res.status(400).json({ error: "URL obligatwa" });
+
+  const output = "video.%(ext)s";
+  const cmd = `yt-dlp -f mp4 -o "${output}" "${url}"`;
+
+  exec(cmd, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Video download error" });
+    }
+
+    res.download("video.mp4", () => {
+      fs.unlinkSync("video.mp4");
+    });
+  });
+});
