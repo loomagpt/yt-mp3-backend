@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: video-downloader
+    env: node
+    plan: free
+    buildCommand: |
+      apt-get update
+      apt-get install -y ffmpeg python3-pip
+      pip3 install -U yt-dlp
+      npm install
+    startCommand: node server.js
